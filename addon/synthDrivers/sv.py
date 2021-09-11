@@ -159,8 +159,6 @@ class SynthDriver(synthDriverHandler.SynthDriver):
 		dll.SVOpenSpeech(byref(self.handle), self._messageWindow, 0, int(voice), 0)
 
 	def speak(self, speechSequence):
-		if len(speechSequence) == 1 and speechSequence[0].strip() == '':
-			return
 		textList = []
 		index = None
 		for item in speechSequence:
