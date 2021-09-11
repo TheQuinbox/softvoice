@@ -131,7 +131,6 @@ class SynthDriver(synthDriverHandler.SynthDriver):
 		global unit
 		self.setup_wndproc()
 		self._messageWindowClassAtom = windll.user32.RegisterClassExW(byref(nvdaSvWndCls))
-		print("atom = %r" % self._messageWindowClassAtom)
 		self._messageWindow = windll.user32.CreateWindowExW(0, self._messageWindowClassAtom, u"nvdaSvWndCls window", 0, 0, 0, 0, 0, None, None, appInstance, None)
 		self.handle = c_int()
 		self.speaking = False
@@ -212,9 +211,7 @@ class SynthDriver(synthDriverHandler.SynthDriver):
 				dll.SVAbort(self.handle)
 				self.speech_list.clear()
 			elif msg == MSG_SPEAK and self.speech_list and not speaking:
-				print("msg_speak")
 				t = self.speech_list.popleft()
-				print("speaking %r" % (t,))
 				speaking = True
 				self.sv_speak(t[0], t[1])
 			return windll.user32.DefWindowProcW(hwnd,msg,wParam,lParam)
@@ -222,7 +219,6 @@ class SynthDriver(synthDriverHandler.SynthDriver):
 
 	def handle_sv_message(self, msg):
 		global speaking
-		print("svmsg %d" % msg)
 		if msg == 1001 and speaking:
 			speaking = False
 			windll.user32.PostMessageW(self._messageWindow, MSG_SPEAK, 0, 0)
@@ -230,8 +226,6 @@ class SynthDriver(synthDriverHandler.SynthDriver):
 
 	def sv_speak(self, text, index):
 		global lastindex, speaking
-		print("sv_speak %s" % text)
-		print(dll.SVTTS(self.handle, text.strip(), 0, 0, self._messageWindow, 0, 0, 0))
 		lastindex = index
 
 	def _get_availableVariants(self):
